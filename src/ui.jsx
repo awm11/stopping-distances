@@ -114,7 +114,7 @@ export function ChangeNote({ last, res, base, at }) {
     if (Math.abs(x) < 0.05) return <span className="nochg">same as ideal</span>;
     return <b>{x > 0 ? '+' : '−'}{Math.abs(x).toFixed(1)} m {x > 0 ? 'longer' : 'shorter'} than ideal</b>;
   };
-  if (!last || !res || !base) return <p className="changenote idle">Change a factor and watch which bar changes.</p>;
+  if (!last || !res || !base) return <p className="changenote idle">Change a factor to see whether it changes the thinking distance, the braking distance, or both.</p>;
   return (
     <p className="changenote" key={last.id}>
       <span className="cn-what">{last.label}{at && <span className="cn-at"> ({at}, compared with ideal conditions)</span>}</span>

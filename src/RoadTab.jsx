@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { RoadSim } from './roadSim.js';
-import { compute, baseline, UNITS, fmtSpeed, fmt } from './physics.js';
+import { compute, baseline, UNITS, fmtSpeed } from './physics.js';
 import { Fig, Factors, ChangeNote, SpeedSlider, blur } from './ui.jsx';
-import { RunGraphs, StopBars } from './Graphs.jsx';
+import { RunGraphs } from './Graphs.jsx';
 
-// Tab 1: the road. The canvas sits on the left; sections 1A-1D on the right.
+// Tab 1: the road. The canvas sits on the left; sections 1A-1C on the right.
 export function RoadStage({ simRef, s, unit, slow, onSnap }) {
   const cvRef = useRef(null), stageRef = useRef(null);
   const live = useRef({}); live.current = { s, unit, slow };
@@ -43,8 +43,6 @@ export function RoadPanel({ simRef, snap, s, change, unit, slow, setSlow, last, 
   const sim = simRef.current;
   const running = snap.state === 'armed' || snap.state === 'think' || snap.state === 'brake';
   const go = () => { sim.drive(); };
-  const flash = last ? { t: Math.abs(last.after.think - last.before.think) > 0.05, b: Math.abs(last.after.brake - last.before.brake) > 0.05 } : { t: false, b: false };
-  const U = UNITS[unit];
   return (
     <>
       <Fig tag="1A" title="Drive">
@@ -60,18 +58,7 @@ export function RoadPanel({ simRef, snap, s, change, unit, slow, setSlow, last, 
         <ChangeNote last={last} res={res} base={base} />
       </Fig>
 
-      <Fig tag="1C" title="Stopping distance">
-        <StopBars key={last ? last.id : 0} res={res} base={base} flash={flash} />
-        <div className="calc">
-          <p className="cl think"><b>Thinking distance</b> = speed &times; reaction time</p>
-          <p className="cl sub">= {fmt(res.v, 1)} m/s &times; {res.tr.toFixed(2)} s = <b>{res.think.toFixed(1)} m</b>
-            {unit !== 'ms' && <span className="conv"> ({fmtSpeed(res.v, unit)} = {fmt(res.v, 1)} m/s)</span>}</p>
-          <p className="cl brake"><b>Braking distance</b> = <b>{res.brake.toFixed(1)} m</b> <span className="conv">(depends on speed, road, tyres, brakes and load)</span></p>
-          <p className="cl total"><b>Stopping distance</b> = {res.think.toFixed(1)} m + {res.brake.toFixed(1)} m = <b>{res.stop.toFixed(1)} m</b></p>
-        </div>
-      </Fig>
-
-      <Fig tag="1D" title="Graphs of the run">
+      <Fig tag="1C" title="Graphs of the run">
         <RunGraphs snap={snap} unit={unit} />
       </Fig>
     </>

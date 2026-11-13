@@ -36,19 +36,28 @@ b.t,.t>b{color:var(--thinkL)} b.b{color:var(--brakeL)}
 .unitlbl{color:var(--muted);font-weight:700;font-size:14px}
 
 /* Equation strip: always visible */
-.eqstrip{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 24px;align-items:center;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:8px 18px 6px;margin:0 0 12px}
-.eqs{display:flex;flex-direction:column;gap:4px}
+/* the three parts (equations, Careful! box, definitions button) spread evenly across the strip */
+.eqstrip{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:10px 32px;background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:10px 24px 8px;margin:0 0 12px}
+.eqs{display:flex;flex-direction:column;align-items:center;gap:12px}   /* the two equations centred on each other */
+.eqs .eq{justify-content:center}
 .eq{margin:0;display:flex;align-items:flex-start;flex-wrap:wrap;gap:4px 10px;font-family:"Bricolage Grotesque","Atkinson Hyperlegible",sans-serif;font-weight:800;font-size:clamp(17px,1.6vw,23px);line-height:1.15}
 .eq .w{display:inline-flex;flex-direction:column;align-items:center}
 .eq .wu{font-family:"Atkinson Hyperlegible",sans-serif;font-size:16px;font-weight:700;color:var(--muted);line-height:1.1;border-top:1.5px solid var(--line);padding:0 6px;margin-top:1px}
 .eq .w.t .wt{color:var(--thinkL)} .eq .w.b .wt{color:var(--brakeL)} .eq .w.s .wt{color:var(--stop)}
 .eq .op{color:var(--muted);font-weight:700}
-.eqside{display:flex;align-items:center;gap:12px;min-width:0}
-.mistake{flex:1;margin:0;padding:7px 12px;border-radius:10px;background:rgba(255,209,102,.12);border:1px solid rgba(255,209,102,.5);font-size:14.5px;line-height:1.4}
+.eqside{flex:1 1 auto;display:flex;align-items:center;gap:24px;min-width:0}
+.eqside .mistake{margin:0 auto}   /* centred between the equations and the button */
+/* wide screens: equal space before, between and after the three parts */
+@media (min-width:1250px){
+  .eqstrip{justify-content:space-evenly}
+  .eqside{display:contents}
+  .eqside .mistake{margin:0}
+}
+.mistake{flex:0 1 auto;margin:0;padding:7px 12px;border-radius:10px;background:rgba(255,209,102,.12);border:1px solid rgba(255,209,102,.5);font-size:14.5px;line-height:1.4}
 .mistake b:first-child{color:var(--stop)}
 .defbtn{flex:none}
 .defbtn.on{border-color:var(--mode)}
-.defs{grid-column:1 / -1;margin:2px 0 4px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.defs{flex:1 0 100%;margin:2px 0 4px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
 .defs div{border-left:3px solid var(--muted);padding:1px 0 1px 9px}
 .defs div.t{border-color:var(--think)} .defs div.b{border-color:var(--brake)} .defs div.s{border-color:var(--stop)}
 .defs dt{font-weight:800;font-size:14px}
@@ -296,7 +305,6 @@ button:focus-visible,input:focus-visible,a:focus-visible,[role=button]:focus-vis
 @media (max-width:900px){
   .app{padding:14px 12px 20px}
   .layout{grid-template-columns:1fr}
-  .eqstrip{grid-template-columns:1fr}
   .stage{min-height:300px}
   .stage.chart{aspect-ratio:1000/640;min-height:0}
   .bottom-block{flex-direction:column;gap:8px}
@@ -304,7 +312,8 @@ button:focus-visible,input:focus-visible,a:focus-visible,[role=button]:focus-vis
 }
 @media (max-width:560px){
   .defs{grid-template-columns:1fr}
-  .eqside{flex-direction:column;align-items:stretch}
+  .eqside{flex-wrap:wrap}
+  .eqside .mistake{margin:0}
   .modetab small{display:none}
   .bins{grid-template-columns:1fr}
 }
