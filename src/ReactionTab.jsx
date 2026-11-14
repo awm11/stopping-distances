@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import { ReactionTest } from './reactionScene.js';
 import { rulerTime, MPH, UNITS, fmtSpeed } from './physics.js';
 import { Fig, blur } from './ui.jsx';
+import { RULER_DROP_DEFS } from './rulerDropArt.js';
 
 export function ReactionStage({ testRef, distract, n, rstate }) {
   const cvRef = useRef(null), stageRef = useRef(null), navRef = useRef(null);
@@ -108,14 +109,15 @@ export function ReactionPanel({ testRef, rstate, distract, setDistract, results,
         <div className="ruler">
           <RulerDiagram />
           <div>
-            <p className="explain small">You can also measure reaction time with a ruler and a partner.</p>
+            <p className="explain small">You can also measure reaction time with a ruler and two students.</p>
             <ol className="steps small">
-              <li>Your partner holds a ruler upright, with <b>0 cm</b> level with the gap between your thumb and finger.</li>
-              <li>They let go <b>without warning</b>.</li>
-              <li>Catch it as fast as you can and read the distance at the top of your thumb.</li>
-              <li>Repeat and find the mean. Use the table to turn the distance into a time.</li>
+              <li>Student A holds a ruler upright, with <b>0 cm</b> level with the gap between Student B&rsquo;s thumb and finger.</li>
+              <li>Student A lets go <b>without warning</b>.</li>
+              <li>Student B catches it as fast as they can and reads the distance at the top of their thumb.</li>
+              <li>Repeat and find the mean.</li>
+              <li>Use the table to turn the distance into a time.</li>
             </ol>
-            <p className="explain small">The further the ruler falls, the longer your reaction time.</p>
+            <p className="explain small">The further the ruler falls, the longer the reaction time.</p>
           </div>
         </div>
       </Fig>
@@ -138,7 +140,7 @@ function RulerTable() {
   );
 }
 
-// Before and after: the ruler starts with 0 cm level with your open thumb and finger, falls, and is caught at 18 cm
+// Before and after: the ruler starts with 0 cm level with Student B's open thumb and finger, falls, and is caught
 const PX = 6.2;   // pixels per cm
 function Ruler({ x, y0 }) {
   const marks = [];
@@ -154,100 +156,56 @@ function Ruler({ x, y0 }) {
     </g>
   );
 }
-// The hands are flat shapes: far fingers in a darker shade, then the hand, then the thumb and index finger in front.
-const fing = (d, w, cls, key) => <path key={key} className={cls} d={d} strokeWidth={w} />;
-// Your partner's hand: the arm comes in from the top left, the fingers hang down, and the thumb and index finger
-// pinch the top of the ruler at (x, y). open: the thumb and finger have sprung apart.
-function TopHand({ x, y, open = false }) {
-  return (
-    <g className="hand partner" transform={`translate(${x} ${y})`}>
-      {fing('M46 -62 Q62 -48 60 -26', 10, 'h-far', 'l')}
-      {fing('M40 -58 Q55 -40 50 -14', 11, 'h-far', 'r')}
-      {fing('M32 -54 Q44 -34 37 -5', 12, 'h-far', 'm')}
-      {/* forearm, wrist and the back of the hand */}
-      <path className="h-body" d="M-200 -150 L-80 -112 C-40 -104 24 -100 48 -70 L46 -52 L30 -36 L-6 -30 L-38 -36 C-70 -52 -130 -84 -200 -104 Z" />
-      {fing(open ? 'M24 -44 Q32 -24 25 -5' : 'M24 -44 Q22 -20 8 -4', 13, 'h-near', 'i')}
-      {fing(open ? 'M-28 -42 Q-40 -24 -30 -6' : 'M-28 -42 Q-22 -18 -8 -4', 15, 'h-near', 't')}
-      <path className="h-crease" d="M-16 -40 Q-2 -34 12 -42" />
-      <ellipse className="h-nail" cx={open ? 24.5 : 9} cy={open ? -8 : -7} rx="3.4" ry="4.4" transform={`rotate(${open ? 8 : 32} ${open ? 24.5 : 9} ${open ? -8 : -7})`} />
-      <ellipse className="h-nail" cx={open ? -30.5 : -10} cy={open ? -9 : -7.5} rx="4" ry="5" transform={`rotate(${open ? -14 : -34} ${open ? -30.5 : -10} ${open ? -9 : -7.5})`} />
-    </g>
-  );
-}
-// Your hand: the arm comes in from the bottom right. The fingers go behind the ruler (part="back") and the thumb
-// comes across the front of it (part="front"). (x, y) is the middle of the ruler, level with the top of your thumb.
-// open: the thumb is lifted clear of the ruler, ready to catch.
-function CatchHand({ x, y, open = false, part }) {
-  const tips = open ? [-34, -35, -32, -25] : [-24, -25, -22, -16];
-  return (
-    <g className="hand you" transform={`translate(${x} ${y})`}>
-      {part === 'back' ? (
-        <>
-          {[7, 18, 29, 39].map((fy, i) => fing(`M36 ${fy + 2} L${tips[i]} ${fy}`, [12, 12, 11, 10][i], 'h-far', i))}
-          <path className="h-body" d="M17 -4 C40 -12 64 -6 80 10 L200 80 L200 150 L42 55 C30 53 19 48 17 42 Z" />
-        </>
-      ) : (
-        <>
-          {fing(open ? 'M48 12 Q36 -8 28 -24' : 'M48 12 Q22 0 -5 6', 17, 'h-edge', 'te')}
-          {fing(open ? 'M48 12 Q36 -8 28 -24' : 'M48 12 Q22 0 -5 6', 14, 'h-near', 't')}
-          <path className="h-patch" d="M40 2 L62 6 L60 26 L42 22 Z" />
-          <ellipse className="h-nail" cx={open ? 28 : -5} cy={open ? -24 : 5.5} rx="4.6" ry="4" transform={`rotate(${open ? 62 : -8} ${open ? 28 : -5} ${open ? -24 : 5.5})`} />
-        </>
-      )}
-    </g>
-  );
-}
+// The diagram: a colleague's drawing of the hands (rulerDropArt.js, used exactly as supplied) with the app's own ruler
+// in place of theirs, scaled to fill the same strip (14 x 122 units). The "After" ruler is lowered so it falls 18 cm.
+const RS = 122 / (32 * PX);                  // ruler scale: our 32 cm-tall ruler drawing -> their 122 units
+const CM = PX * RS;                          // units per cm in their drawing (about 3.8)
+// x: the middle of the ruler; bottom: the bottom end of the ruler (0 cm is 1 cm above it)
+const DropRuler = ({ x, bottom }) => <g transform={`translate(${x} ${bottom}) scale(${RS})`}><Ruler x={0} y0={-PX} /></g>;
 function RulerDiagram() {
-  const fy = 350, fall = 18;           // fy: the top of your thumb; the ruler falls 18 cm
-  const bx = 95, ax = 290;             // the ruler in each picture
-  const rtop = fy - 31 * PX;           // the top end of the ruler before it is dropped
-  const zeroAfter = fy + fall * PX;    // the 0 cm mark after the fall
-  const rulerTopAfter = zeroAfter - 31 * PX;
+  const catchY = 170.4;                      // the top of Student B's thumb and finger (0 cm before the drop)
+  const fell = 18;                           // how far the ruler falls before it's caught
+  const zeroAfter = catchY + fell * CM;      // the 0 cm mark after the drop
+  const bottomAfter = zeroAfter + CM, topAfter = bottomAfter - 122;
+  const t = rulerTime(fell).toFixed(2);
   return (
-    <svg className="rulerdiag" viewBox="0 0 380 516" role="img" aria-label="Before: your partner holds the top of the ruler, with 0 cm level with your open thumb and finger. After: your partner lets go, the ruler falls, and you catch it. It fell 18 cm.">
-      <defs>
-        <clipPath id="rdL"><rect x="0" y="0" width="189" height="516" /></clipPath>
-        <clipPath id="rdR"><rect x="191" y="0" width="189" height="516" /></clipPath>
-      </defs>
-      <text className="phead" x={bx} y="16" textAnchor="middle">Before</text>
-      <text className="phead" x={ax} y="16" textAnchor="middle">After</text>
-      <line className="divider" x1="190" x2="190" y1="4" y2="512" />
+    <svg className="rulerdiag art" viewBox="0 -44 304 318" role="img" aria-label={`Before: Student A holds the top of the ruler, with 0 cm level with Student B's open thumb and finger. After: Student A lets go, the ruler falls, and Student B catches it. It fell ${fell} cm.`}>
+      <defs dangerouslySetInnerHTML={{ __html: RULER_DROP_DEFS }} />
+      <text className="phead" x="76" y="-30" textAnchor="middle">Before</text>
+      <text className="phead" x="228" y="-30" textAnchor="middle">After</text>
 
-      {/* BEFORE */}
-      <g clipPath="url(#rdL)">
-        <CatchHand part="back" x={bx} y={fy} open />
-        <Ruler x={bx} y0={fy} />
-        <TopHand x={bx} y={rtop + 12} />
-        <CatchHand part="front" x={bx} y={fy} open />
-      </g>
-      <text className="lbl" x="182" y="40" textAnchor="end">Your partner holds</text>
-      <text className="lbl" x="182" y="54" textAnchor="end">the top of the ruler</text>
-      <text className="lbl" x="8" y={fy + 100}>Your thumb and finger are</text>
-      <text className="lbl" x="8" y={fy + 114}>open, level with 0 cm</text>
+      {/* LEFT: holding (layer order as in the colleague's drawing) */}
+      <use href="#rd-handBack" />
+      <DropRuler x={87} bottom={174} />
+      <use href="#rd-topHand" />
+      <g clipPath="url(#rd-cIdxL)"><DropRuler x={87} bottom={174} /></g>
+      <use href="#rd-thumb" />
+      <text className="lbl" x="76" y="-16" textAnchor="middle">Student A holds</text>
+      <text className="lbl" x="76" y="-7" textAnchor="middle">the top of the ruler</text>
+      <text className="lbl" x="104" y="224" textAnchor="middle">Student B&rsquo;s thumb and finger are</text>
+      <text className="lbl" x="104" y="233" textAnchor="middle">open, level with 0 cm</text>
 
-      {/* AFTER */}
-      <g clipPath="url(#rdR)">
-        <CatchHand part="back" x={ax} y={fy} />
-        <Ruler x={ax} y0={zeroAfter} />
-        <g className="motion">
-          {[-7, 0, 7].map(dx => <line key={dx} x1={ax + dx} x2={ax + dx} y1={rulerTopAfter - 34} y2={rulerTopAfter - 8} />)}
-        </g>
-        <TopHand x={ax} y={rtop + 12} open />
-        <CatchHand part="front" x={ax} y={fy} />
-      </g>
-      <text className="lbl" x="374" y="40" textAnchor="end">They let go</text>
-      <text className="lbl" x="374" y="54" textAnchor="end">without warning</text>
-      <text className="lbl" x="374" y={fy - 22} textAnchor="end">You catch it</text>
-      {/* how far it fell: from the 0 cm mark up to the top of your thumb */}
+      {/* RIGHT: dropped and caught */}
+      <use href="#rd-handBack" transform="translate(135 0)" />
+      <DropRuler x={224} bottom={bottomAfter} />
+      <use href="#rd-topHand" transform="translate(134 0)" />
+      <use href="#rd-thumb" transform="translate(135 0) rotate(9 130 172)" />
+      {/* the colleague's motion lines, moved down to sit just above the lowered ruler */}
+      <g fill="url(#rd-blur)" transform={`translate(0 ${topAfter - 82})`}><rect x="217.8" y="65" width="2.6" height="16" /><rect x="222.3" y="65" width="2.6" height="16" /><rect x="226.8" y="65" width="2.6" height="16" /></g>
+      <text className="lbl" x="228" y="-16" textAnchor="middle">Student A lets go</text>
+      <text className="lbl" x="228" y="-7" textAnchor="middle">without warning</text>
+      <text className="lbl" x="300" y="141" textAnchor="end">Student B</text>
+      <text className="lbl" x="300" y="150" textAnchor="end">catches it</text>
+      {/* how far it fell: from the 0 cm mark up to the top of Student B's thumb */}
       <g className="dim">
-        <line x1={ax - 54} x2={ax - 40} y1={fy} y2={fy} className="tick" />
-        <line x1={ax - 54} x2={ax - 14} y1={zeroAfter} y2={zeroAfter} className="tick" />
-        <path d={`M${ax - 47} ${fy + 3} V${zeroAfter - 3} M${ax - 52} ${fy + 9} l5 -7 l5 7 M${ax - 52} ${zeroAfter - 9} l5 7 l5 -7`} />
+        <line x1="196" x2="205" y1={catchY} y2={catchY} className="tick" />
+        <line x1="196" x2="216" y1={zeroAfter} y2={zeroAfter} className="tick" />
+        <path d={`M201 ${catchY + 1.5} V${zeroAfter - 1.5} M198 ${catchY + 5} l3 -4 l3 4 M198 ${zeroAfter - 5} l3 4 l3 -4`} />
       </g>
-      <text className="lbl dimlbl" x={ax - 56} y={zeroAfter - 34} textAnchor="end">fell</text>
-      <text className="lbl dimlbl" x={ax - 56} y={zeroAfter - 19} textAnchor="end">18 cm</text>
-      <text className="lbl strong" x={ax} y={zeroAfter + 26} textAnchor="middle">Read 18 cm = 0.19 s</text>
-      <text className="lbl" x={ax} y={zeroAfter + 41} textAnchor="middle">(use the table in 4D)</text>
+      <text className="lbl dimlbl" x="194" y={(catchY + zeroAfter) / 2 - 1} textAnchor="end">fell</text>
+      <text className="lbl dimlbl" x="194" y={(catchY + zeroAfter) / 2 + 8} textAnchor="end">{fell} cm</text>
+      <text className="lbl strong" x="228" y={bottomAfter + 13} textAnchor="middle">Read {fell} cm = {t} s</text>
+      <text className="lbl" x="228" y={bottomAfter + 22} textAnchor="middle">(use the table in 4D)</text>
     </svg>
   );
 }

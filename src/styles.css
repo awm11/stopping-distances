@@ -255,6 +255,13 @@ button:focus-visible,input:focus-visible,a:focus-visible,[role=button]:focus-vis
 .rulerdiag .divider{stroke:var(--line);stroke-width:1.5;stroke-dasharray:4 4}
 .rulerdiag .lbl{fill:var(--muted);font-size:11.5px;font-weight:700}
 .rulerdiag .lbl.strong{fill:var(--ink);font-size:13px;font-weight:800}
+/* the colleague-drawn version: a 304-unit-wide drawing, so smaller type and lines in its own units */
+.rulerdiag.art{max-width:480px;background:#fff;border-radius:12px}
+.rulerdiag.art .phead{font-size:10px;fill:#1b1f23}
+.rulerdiag.art .lbl{font-size:7.2px;fill:#555}
+.rulerdiag.art .lbl.strong{font-size:8.2px;fill:#1b1f23}
+.rulerdiag.art .dimlbl{fill:#2f6db0}
+.rulerdiag.art .dim path,.rulerdiag.art .dim line{stroke:#2f6db0;stroke-width:1}
 
 /* The brake pedal on the reaction-test dashboard */
 .pedal{position:absolute;left:6%;bottom:4%;display:flex;flex-direction:column;align-items:center;gap:4px;padding:0;border:0;background:none;cursor:pointer;touch-action:manipulation;font:inherit;-webkit-tap-highlight-color:transparent}
