@@ -150,7 +150,7 @@ export class ReactionTest {
     // messages
     if (this.state === 'idle') pill(ctx, W / 2, H * 0.14, 'Press Drive. When the car in front brakes, hit the BRAKE pedal as fast as you can!', 'rgba(18,20,22,.85)', '#eef0ef', 'center', 15);
     if (this.state === 'wait') pill(ctx, W / 2, H * 0.14, this.speed < 1 ? 'Pulling away…' : 'Watch the car in front… foot over the brake!', 'rgba(18,20,22,.85)', '#eef0ef', 'center', 16);
-    if (this.state === 'early') pill(ctx, W / 2, H * 0.14, this.missed ? `Too slow! That goes down as 3.0 s.${this.goNum >= 5 ? ' Press Next repeat to finish.' : ' Press Next repeat for repeat ' + (this.goNum + 1) + '.'}` : 'Too soon! The car in front hadn\u2019t braked. Press Next repeat to try again.', '#ffd166', '#2a1c00', 'center', 16);
+    if (this.state === 'early') pill(ctx, W / 2, H * 0.14, this.missed ? `Too slow! Recorded as 3.000 seconds.${this.goNum >= 5 ? ' Press Next repeat to finish.' : ' Press Next repeat for repeat ' + (this.goNum + 1) + '.'}` : 'Too soon! The car in front hadn\u2019t braked. Press Next repeat to try again.', '#ffd166', '#2a1c00', 'center', 16);
     if (this.state === 'slow') pill(ctx, W / 2, H * 0.14, `${this.rt.toFixed(3)} s: too fast to be real, so that was a guess. Press Next repeat to try again.`, '#ffd166', '#2a1c00', 'center', 15);
     if (this.state === 'done') pill(ctx, W / 2, H * 0.14, this.distract ? 'All 5 repeats done! Compare your means in section 4B.' : 'All 5 repeats done! Now switch distractions on.', '#58c08a', '#05200f', 'center', 16);
     if ((this.state === 'wait' || this.state === 'go' || this.state === 'result') && this.goNum) {

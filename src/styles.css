@@ -60,9 +60,9 @@ b.t,.t>b{color:var(--thinkL)} b.b{color:var(--brakeL)}
 .defs{flex:1 0 100%;margin:2px 0 4px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
 .defs div{border-left:3px solid var(--muted);padding:1px 0 1px 9px}
 .defs div.t{border-color:var(--think)} .defs div.b{border-color:var(--brake)} .defs div.s{border-color:var(--stop)}
-.defs dt{font-weight:800;font-size:14px}
+.defs dt{font-weight:800;font-size:17px}
 .defs div.t dt{color:var(--thinkL)} .defs div.b dt{color:var(--brakeL)} .defs div.s dt{color:var(--stop)}
-.defs dd{margin:0;font-size:13.5px;line-height:1.35;color:var(--muted)}
+.defs dd{margin:0;font-size:16px;line-height:1.4;color:var(--muted)}
 .defs dd b{color:var(--ink)}
 
 /* Main grid */
@@ -231,7 +231,7 @@ button:focus-visible,input:focus-visible,a:focus-visible,[role=button]:focus-vis
 .rtable.conv td{padding:2px 6px}
 .rtable.conv thead th{font-size:12.5px;line-height:1.25}
 .rtable tr.hl td{background:color-mix(in srgb,var(--mode) 22%,transparent);color:var(--ink);font-weight:800}
-.compare{margin:8px 0 0;padding:7px 10px;border-radius:10px;background:var(--well);border:1px solid var(--line);font-size:14px}
+.compare{margin:8px 0 0;padding:7px 10px;border-radius:10px;background:var(--well);border:1px solid var(--line);font-size:17px;line-height:1.4}
 .compare b{color:var(--mode)}
 .ruler{display:grid;grid-template-columns:1fr;gap:6px}
 .rulerdiag{width:100%;max-width:380px;height:auto;margin:0 auto;display:block}
@@ -283,7 +283,7 @@ button:focus-visible,input:focus-visible,a:focus-visible,[role=button]:focus-vis
 .more-sims:hover,.more-sims:focus-visible{color:var(--accent)}
 .more-sims-icon{width:42px;height:42px;display:block;transition:transform .2s ease}
 .more-sims:hover .more-sims-icon{transform:scale(1.15) rotate(10deg)}
-.more-sims-note{margin:0;color:var(--muted);font-size:13px;max-width:440px;line-height:1.4;text-align:center}
+.more-sims-note{margin:0;color:var(--muted);font-size:13px;white-space:nowrap;line-height:1.4;text-align:center}
 .side-below{display:none}
 
 /* Fitted to the window on wide screens: nothing scrolls except the side panel */
@@ -316,6 +316,7 @@ button:focus-visible,input:focus-visible,a:focus-visible,[role=button]:focus-vis
   .stage.chart{aspect-ratio:1000/640;min-height:0}
   .bottom-block{flex-direction:column;gap:8px}
   .side-right{display:none} .side-below{display:inline}
+  .more-sims-note{white-space:normal}   /* lets it wrap on small screens rather than run off the side */
 }
 @media (max-width:560px){
   .defs{grid-template-columns:1fr}

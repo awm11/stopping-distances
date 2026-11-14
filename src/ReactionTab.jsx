@@ -60,7 +60,7 @@ export function ReactionPanel({ testRef, rstate, distract, setDistract, results,
   const n = results.none, d = results.distract;
   const mn = n.length ? mean(n) : null, md = d.length ? mean(d) : null;
   const latest = distract ? md : mn;
-  const v30 = 30 * MPH, v70 = 70 * MPH;
+  const v30 = 30 * MPH;
   const rows = Array.from({ length: 5 }, (_, i) => i);
   return (
     <>
@@ -86,12 +86,6 @@ export function ReactionPanel({ testRef, rstate, distract, setDistract, results,
             <tr className="mean"><th>Mean</th><td>{mn != null ? mn.toFixed(3) + ' s' : '–'}</td><td>{md != null ? md.toFixed(3) + ' s' : '–'}</td></tr>
           </tbody>
         </table>
-        {latest != null && (
-          <div className="calc">
-            <p className="cl think">At {fmtSpeed(v30, unit)}: thinking distance = {v30.toFixed(1)} m/s &times; {latest.toFixed(2)} s = <b>{(v30 * latest).toFixed(1)} m</b></p>
-            <p className="cl think">At {fmtSpeed(v70, unit)}: thinking distance = {v70.toFixed(1)} m/s &times; {latest.toFixed(2)} s = <b>{(v70 * latest).toFixed(1)} m</b></p>
-          </div>
-        )}
         {mn != null && md != null && (
           <p className="compare">Distractions changed your mean by <b>{md - mn >= 0 ? '+' : '\u2212'}{Math.abs(md - mn).toFixed(3)} s</b>.
             At {fmtSpeed(v30, unit)}, that is <b>{(Math.abs(md - mn) * v30).toFixed(1)} m</b> {md >= mn ? 'more' : 'less'} thinking distance.</p>
@@ -102,7 +96,7 @@ export function ReactionPanel({ testRef, rstate, distract, setDistract, results,
             Drive with my reaction time
           </button>
         </div>
-        <p className="hint">Typical reaction times are between <b>0.2 s and 0.9 s</b>. A real driver is slower than this test: they have to decide what to do and move their foot to the brake. The Highway Code uses <b>0.67 s</b>. If you don't brake within 3 s, it goes down as 3.0 s. A repeat under 0.1 s is a guess and doesn't count.</p>
+        <p className="hint">Typical reaction times are between <b>0.2 s and 0.9 s</b>. A real driver is slower than this test: they have to decide what to do and move their foot to the brake. The Highway Code uses <b>0.67 s</b>.</p>
       </Fig>
 
       <Fig tag="4C" title="The ruler-drop test">
